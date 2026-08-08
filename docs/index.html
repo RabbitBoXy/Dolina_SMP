@@ -45,31 +45,29 @@
             gap: 10px;
         }
         .title i { font-size: 2rem; color: #e6c27a; background: rgba(0,0,0,0.2); padding: 8px 10px 8px 12px; border-radius: 60px; }
-        .badge-online {
-            background: #2d4b3e;
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            border: 1px solid #6d8f72;
-            color: #d4edc9;
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            background: #182823;
+            padding: 18px 20px;
+            border-radius: 28px;
+            margin: 12px 0 18px 0;
+            border: 1px solid #4b6b55;
+        }
+        .status-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            box-shadow: 0 2px 8px rgba(0,20,10,0.6);
+            gap: 10px;
+            font-size: 1.1rem;
         }
-        .badge-online i { color: #7fc97b; }
-        .online-number {
-            background: #1f332b;
-            padding: 2px 14px;
-            border-radius: 30px;
-            font-weight: 600;
-            color: #c7f0b6;
-            min-width: 30px;
-            text-align: center;
-        }
-        .status-text { font-weight: 500; letter-spacing: 0.2px; }
+        .status-item i { width: 28px; font-size: 1.2rem; }
+        .status-item .label { color: #bfd7b5; font-weight: 400; }
+        .status-item .value { font-weight: 600; color: #f1e3c6; }
+        .status-item .value.online { color: #7fc97b; }
+        .status-item .value.offline { color: #f28b82; }
+        
         .description {
             background: rgba(20, 35, 30, 0.6);
             padding: 22px 24px;
@@ -81,6 +79,7 @@
             font-size: 1.05rem;
         }
         .description i { color: #dbbd7a; margin-right: 6px; }
+        
         .version-block { margin: 8px 0 12px 0; }
         .version-tag {
             display: inline-block;
@@ -116,6 +115,7 @@
             color: #f1e3c6;
             border: 1px solid #5d7f62;
         }
+        
         .tg-section {
             display: flex;
             flex-wrap: wrap;
@@ -131,13 +131,25 @@
             align-items: center;
             gap: 12px;
             background: #0e1e18;
-            padding: 5px 18px 5px 14px;
+            padding: 8px 22px 8px 18px;
             border-radius: 40px;
             border: 1px solid #4a6b4e;
+            transition: 0.2s;
+            cursor: pointer;
         }
-        .tg-item:hover { background: #1d352a; border-color: #b8a56a; }
-        .tg-item a { color: #e2e8d6; text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 10px; }
+        .tg-item:hover { background: #1d352a; border-color: #b8a56a; transform: scale(1.02); }
+        .tg-item a { 
+            color: #e2e8d6; 
+            text-decoration: none; 
+            font-weight: 500; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+            font-size: 1rem;
+        }
         .tg-item i { color: #31a9e0; font-size: 1.3rem; }
+        .tg-item .tg-emoji { font-size: 1.1rem; }
+        
         .creator {
             display: flex;
             align-items: center;
@@ -153,6 +165,7 @@
         .creator i { color: #dbbd7a; }
         .creator a { color: #eeddbb; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
         .creator a:hover { color: #f7e3b0; text-decoration: underline; }
+        
         .footer-small {
             display: flex;
             justify-content: space-between;
@@ -179,21 +192,24 @@
             background: transparent;
             border: 1px solid #6f8f6a;
             color: #d4e8c9;
-            padding: 4px 14px;
+            padding: 6px 18px;
             border-radius: 40px;
             cursor: pointer;
             font-weight: 500;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            transition: 0.2s;
         }
         .refresh-btn:hover { background: #2f4d3a; border-color: #bbaa79; }
+        
         @media (max-width: 550px) {
             .card { padding: 20px 16px; }
             .title { font-size: 1.7rem; flex-wrap: wrap; }
             .ip-item { width: 100%; }
             .tg-section { flex-direction: column; }
+            .status-grid { grid-template-columns: 1fr; }
             .badge-online { width: 100%; justify-content: center; }
         }
     </style>
@@ -202,14 +218,24 @@
 <div class="card">
     <div class="logo-area">
         <div class="title"><i class="fas fa-campground"></i> Долина Приключений</div>
-        <div class="badge-online" id="onlineBadge">
-            <i class="fas fa-circle" id="statusDot" style="color: #6fbf6f; font-size: 0.7rem;"></i>
-            <span class="status-text" id="statusText">Проверка...</span>
-            <span class="online-number" id="onlineCount">--</span>
-            <button class="refresh-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i> Обновить</button>
+        <button class="refresh-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i> Обновить</button>
+    </div>
+
+    <!-- СТАТУС И ОНЛАЙН -->
+    <div class="status-grid">
+        <div class="status-item">
+            <i class="fas fa-circle" id="statusDot" style="color: #6fbf6f; font-size: 1rem;"></i>
+            <span class="label">Статус:</span>
+            <span class="value" id="statusText">Проверка...</span>
+        </div>
+        <div class="status-item">
+            <i class="fas fa-users"></i>
+            <span class="label">Онлайн:</span>
+            <span class="value" id="onlineCount">--</span>
         </div>
     </div>
 
+    <!-- ОПИСАНИЕ -->
     <div class="description">
         <p><i class="fas fa-fire"></i> Добро пожаловать в Долину Приключений! 🏕️</p>
         <p style="margin-top:8px;">Представь место, где каждый рассвет встречают у костра с новыми друзьями, а закаты встречают на вершинах неизведанных гор. Мы — молодое дружелюбное СМП-сообщество, созданное для уютной и спокойной игры.</p>
@@ -219,32 +245,46 @@
         <p style="margin-top:10px;"><i class="fas fa-users"></i> Присоединяйся к нашему небольшому, но уютному семейству. В Долине всегда есть место для нового путешественника!</p>
     </div>
 
+    <!-- ВЕРСИИ -->
     <div class="version-block">
         <span class="version-tag"><i class="fab fa-java"></i> Java 1.10 — 26.2</span>
         <span class="version-tag"><i class="fas fa-cube"></i> Bedrock 26.0 — 26.32</span>
         <span style="margin-left:6px;color:#b2cba5;font-size:0.85rem;"><i class="fas fa-tag"></i> все поддерживаемые</span>
     </div>
 
+    <!-- IP -->
     <div class="ip-block">
         <div class="ip-item"><i class="fab fa-java"></i><span class="ip-label">Java</span><span class="ip-address">d2.rustix.me:25172</span></div>
         <div class="ip-item"><i class="fas fa-mobile-alt"></i><span class="ip-label">Bedrock</span><span class="ip-address">d2.rustix.me:27902</span></div>
     </div>
 
+    <!-- ТЕЛЕГРАМ: КНОПКИ -->
     <div class="tg-section">
-        <div class="tg-item"><a href="https://t.me/Dolina_SMP" target="_blank"><i class="fab fa-telegram-plane"></i> Канал сервера</a></div>
-        <div class="tg-item"><a href="https://t.me/Dolina_SMP_chat" target="_blank"><i class="fab fa-telegram-plane"></i> Чат сервера</a></div>
-        <div style="flex:1;min-width:120px;"></div>
+        <div class="tg-item">
+            <a href="https://t.me/Dolina_SMP" target="_blank">
+                <i class="fab fa-telegram-plane"></i> Канал сервера
+            </a>
+        </div>
+        <div class="tg-item">
+            <a href="https://t.me/Dolina_SMP_chat" target="_blank">
+                <i class="fab fa-telegram-plane"></i> Группа сервера
+            </a>
+        </div>
         <div class="tg-item" style="background:#1a2a20;border-color:#7d8f6a;">
-            <i class="fas fa-at" style="color:#dbbd7a;"></i>
-            <a href="https://t.me/RabbitBoXy" target="_blank" style="color:#e3dcc0;">@RabbitBoXy</a>
+            <a href="https://t.me/RabbitBoXy" target="_blank" style="color:#e3dcc0;">
+                <i class="fas fa-user-cog"></i> Владелец
+            </a>
         </div>
     </div>
 
+    <!-- СОЗДАТЕЛЬ (доп. информация) -->
     <div class="creator">
-        <i class="fas fa-user-cog"></i>
+        <i class="fas fa-paw"></i>
         <span>Создатель сервера:</span>
-        <a href="https://t.me/RabbitBoXy" target="_blank"><i class="fas fa-paw"></i> RabbitBoXy</a>
-        <span style="margin-left:auto;background:#1b3126;padding:3px 16px;border-radius:30px;font-size:0.8rem;border:1px solid #4a6b4e;"><i class="fas fa-tag"></i> @RabbitBoXy</span>
+        <a href="https://t.me/RabbitBoXy" target="_blank"><i class="fas fa-user"></i> RabbitBoXy</a>
+        <span style="margin-left:auto;background:#1b3126;padding:3px 16px;border-radius:30px;font-size:0.8rem;border:1px solid #4a6b4e;">
+            <i class="fas fa-tag"></i> @RabbitBoXy
+        </span>
     </div>
 
     <div class="footer-small">
@@ -255,7 +295,6 @@
 
 <script>
 (function() {
-    // ⚡ СЮДА ВСТАВЬ СВОЮ ССЫЛКУ С RENDER ПОСЛЕ ШАГА 4
     const API_URL = 'https://dolina-smp.onrender.com/status';
 
     const statusText = document.getElementById('statusText');
@@ -273,22 +312,25 @@
             .then(res => res.json())
             .then(data => {
                 if (data.online === true) {
-                    statusText.textContent = 'Сервер работает';
+                    statusText.textContent = 'Активен ✅';
+                    statusText.className = 'value online';
                     onlineCount.textContent = data.players || 0;
                     serverStatusText.textContent = '✅ работает';
                     statusDot.style.color = '#6fbf6f';
                 } else {
-                    statusText.textContent = 'Сервер не отвечает';
+                    statusText.textContent = 'Не активен ⛔';
+                    statusText.className = 'value offline';
                     onlineCount.textContent = '—';
                     serverStatusText.textContent = '⛔ офлайн';
-                    statusDot.style.color = '#bf6f6f';
+                    statusDot.style.color = '#f28b82';
                 }
             })
             .catch(() => {
-                statusText.textContent = 'Сервер не отвечает';
+                statusText.textContent = 'Ошибка ⚠️';
+                statusText.className = 'value offline';
                 onlineCount.textContent = '—';
-                serverStatusText.textContent = '⛔ офлайн';
-                statusDot.style.color = '#bf6f6f';
+                serverStatusText.textContent = '⚠️ ошибка';
+                statusDot.style.color = '#f28b82';
             });
     }
 
