@@ -1,18 +1,13 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-from mcstatus import JavaServer
-import time
+import requests
 from datetime import datetime
 import threading
+import time
 
 app = Flask(__name__)
-CORS(app)  # разрешаем запросы с любого сайта
+CORS(app)
 
-# Настройки твоего сервера
-SERVER_HOST = "d2.rustix.me"
-SERVER_PORT = 25172
-
-# Кеш для статуса (чтобы не дёргать сервер при каждом запросе)
 cached_status = {
     "online": False,
     "players": 0,
@@ -24,24 +19,28 @@ cached_status = {
 }
 
 def update_status_loop():
-    """Фоновый процесс, который обновляет статус каждые 30 секунд"""
     global cached_status
     while True:
         try:
-            print(f"🔄 Проверяю сервер {SERVER_HOST}:{SERVER_PORT}...")
-            server = JavaServer.lookup(f"{SERVER_HOST}:{SERVER_PORT}")
-            status = server.status()
+            # Используем API mcsrvstat.us (он видит твой сервер)
+            resp = requests.get(
+                'https://api.mcsrvstat.us/2/d2.rustix.me',
+                timeout=10
+            )
+            data = resp.json()
+            
+            online = data.get('online', False)
             
             cached_status = {
-                "online": True,
-                "players": status.players.online,
-                "max_players": status.players.max,
-                "version": status.version.name,
-                "motd": str(status.description),
-                "latency": round(status.latency, 2),
+                "online": online,
+                "players": data.get('players', {}).get('online', 0) if online else 0,
+                "max_players": data.get('players', {}).get('max', 0) if online else 0,
+                "version": data.get('version', 'Неизвестно') if online else 'Неизвестно',
+                "motd": str(data.get('motd', {}).get('clean', [''])[0]) if online else '',
+                "latency": 0,
                 "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
-            print(f"✅ Сервер работает, игроков: {status.players.online}")
+            print(f"✅ Статус: {'онлайн' if online else 'офлайн'}, игроков: {cached_status['players']}")
         except Exception as e:
             cached_status = {
                 "online": False,
@@ -55,26 +54,22 @@ def update_status_loop():
             }
             print(f"❌ Ошибка: {e}")
         
-        time.sleep(30)  # пауза 30 секунд
+        time.sleep(30)
 
 @app.route('/')
 def home():
     return jsonify({
         "status": "ok",
         "message": "Minecraft server status API",
-        "endpoints": {
-            "/status": "Получить статус сервера"
-        }
+        "endpoint": "/status"
     })
 
 @app.route('/status')
 def get_status():
-    """Возвращает текущий статус сервера"""
     return jsonify(cached_status)
 
 if __name__ == '__main__':
-    # Запускаем фоновый поток для обновления статуса
     thread = threading.Thread(target=update_status_loop, daemon=True)
     thread.start()
-    print("🚀 Сервер запущен на порту 10000")
+    print("🚀 Сервер запущен")
     app.run(host='0.0.0.0', port=10000)
