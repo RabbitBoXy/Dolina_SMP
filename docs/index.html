@@ -44,7 +44,7 @@
             align-items: center;
             gap: 10px;
         }
-        .title i { display: none; } /* скрываем иконку */
+        .title i { display: none; }
         
         .status-grid {
             display: grid;
@@ -266,7 +266,8 @@
 
 <script>
 (function() {
-    const API_URL = 'https://dolina-smp.onrender.com/status';
+    // ИСПОЛЬЗУЕМ API MCAPI.US С ТВОИМ ПОРТОМ
+    const API_URL = 'https://mcapi.us/server/status?ip=d2.rustix.me&port=25172';
 
     const statusText = document.getElementById('statusText');
     const onlineCount = document.getElementById('onlineCount');
@@ -279,10 +280,14 @@
         fetch(API_URL, { cache: 'no-store' })
             .then(res => res.json())
             .then(data => {
-                if (data.online === true) {
+                // mcapi.us возвращает { online: true/false, players: { now: 5 } }
+                const isOnline = data.online === true;
+                const players = data.players?.now ?? 0;
+
+                if (isOnline) {
                     statusText.textContent = 'Активен ✅';
                     statusText.className = 'value online';
-                    onlineCount.textContent = data.players || 0;
+                    onlineCount.textContent = players;
                     statusDot.style.color = '#6fbf6f';
                 } else {
                     statusText.textContent = 'Не активен ⛔';
