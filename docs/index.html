@@ -44,7 +44,7 @@
             align-items: center;
             gap: 10px;
         }
-        .title i { font-size: 2rem; color: #e6c27a; background: rgba(0,0,0,0.2); padding: 8px 10px 8px 12px; border-radius: 60px; }
+        .title i { display: none; } /* скрываем иконку */
         
         .status-grid {
             display: grid;
@@ -185,7 +185,7 @@
 <body>
 <div class="card">
     <div class="logo-area">
-        <div class="title"><i class="fas fa-campground"></i> Долина Приключений</div>
+        <div class="title">Долина Приключений</div>
     </div>
 
     <!-- СТАТУС И ОНЛАЙН -->
@@ -204,7 +204,7 @@
 
     <!-- ОПИСАНИЕ -->
     <div class="description">
-        <p><i class="fas fa-fire"></i> Добро пожаловать в Долину Приключений! 🏕️</p>
+        <p><i class="fas fa-fire"></i> Добро пожаловать в Долину Приключений!</p>
         <p style="margin-top:8px;">Представь место, где каждый рассвет встречают у костра с новыми друзьями, а закаты встречают на вершинах неизведанных гор. Мы — молодое дружелюбное СМП-сообщество, созданное для уютной и спокойной игры.</p>
         <div style="margin:10px 0 4px 0;"><i class="fas fa-shield-alt"></i> <strong>Уют и безопасность</strong> — Грифинг строго запрещен! Мы строим, а не разрушаем.</div>
         <div style="margin:6px 0;"><i class="fas fa-compass"></i> <strong>Удобная навигация</strong> — Команды <code style="background:#1a2a1f;padding:0 10px;border-radius:20px;">/spawn</code> и <code style="background:#1a2a1f;padding:0 10px;border-radius:20px;">/home</code> помогут тебе не потеряться.</div>
@@ -260,7 +260,7 @@
     </div>
 
     <div class="footer-small">
-        <span><i class="fas fa-tree"></i> Долина Приключений · 2026</span>
+        <span>Долина Приключений · 2026</span>
     </div>
 </div>
 
