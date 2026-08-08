@@ -136,6 +136,7 @@
             border-radius: 32px;
             margin: 20px 0 14px 0;
             border: 1px solid #4d6b51;
+            justify-content: center;
         }
         .tg-item {
             display: flex;
@@ -159,28 +160,11 @@
             font-size: 1rem;
         }
         .tg-item i { color: #31a9e0; font-size: 1.3rem; }
-        
-        .creator {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            background: #0b1d17;
-            padding: 10px 22px;
-            border-radius: 60px;
-            margin: 10px 0 4px 0;
-            border: 1px solid #5f7a5a;
-            font-size: 1rem;
-        }
-        .creator i { color: #dbbd7a; }
-        .creator a { color: #eeddbb; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
-        .creator a:hover { color: #f7e3b0; text-decoration: underline; }
+        .tg-item .owner-icon { color: #dbbd7a; }
         
         .footer-small {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
+            justify-content: center;
             margin-top: 22px;
             font-size: 0.8rem;
             color: #a1b89a;
@@ -188,37 +172,12 @@
             padding-top: 16px;
         }
         .footer-small i { color: #c9a86a; }
-        .status-refresh {
-            background: #1f362c;
-            padding: 5px 16px;
-            border-radius: 60px;
-            font-size: 0.8rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            border: 1px solid #5d7a5a;
-        }
-        .refresh-btn {
-            background: transparent;
-            border: 1px solid #6f8f6a;
-            color: #d4e8c9;
-            padding: 6px 18px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
-        }
-        .refresh-btn:hover { background: #2f4d3a; border-color: #bbaa79; }
         
         @media (max-width: 550px) {
             .card { padding: 20px 16px; }
             .title { font-size: 1.7rem; flex-wrap: wrap; }
             .server-info { grid-template-columns: 1fr; }
-            .tg-section { flex-direction: column; }
+            .tg-section { flex-direction: column; align-items: center; }
             .status-grid { grid-template-columns: 1fr; }
         }
     </style>
@@ -227,7 +186,6 @@
 <div class="card">
     <div class="logo-area">
         <div class="title"><i class="fas fa-campground"></i> Долина Приключений</div>
-        <button class="refresh-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i> Обновить</button>
     </div>
 
     <!-- СТАТУС И ОНЛАЙН -->
@@ -282,7 +240,7 @@
         </div>
     </div>
 
-    <!-- ТЕЛЕГРАМ: КНОПКИ (канал + группа) -->
+    <!-- ТЕЛЕГРАМ: КНОПКИ (канал + группа + владелец) -->
     <div class="tg-section">
         <div class="tg-item">
             <a href="https://t.me/Dolina_SMP" target="_blank">
@@ -294,23 +252,15 @@
                 <i class="fab fa-telegram-plane"></i> Группа сервера
             </a>
         </div>
-    </div>
-
-    <!-- ВЛАДЕЛЕЦ (одна кнопка) -->
-    <div class="creator">
-        <i class="fas fa-user-cog"></i>
-        <span>Владелец сервера:</span>
-        <a href="https://t.me/RabbitBoXy" target="_blank">
-            <i class="fas fa-paw"></i> RabbitBoXy
-        </a>
-        <span style="margin-left:auto;background:#1b3126;padding:3px 16px;border-radius:30px;font-size:0.8rem;border:1px solid #4a6b4e;">
-            <i class="fas fa-tag"></i> @RabbitBoXy
-        </span>
+        <div class="tg-item">
+            <a href="https://t.me/RabbitBoXy" target="_blank">
+                <i class="fas fa-user-cog owner-icon"></i> Владелец
+            </a>
+        </div>
     </div>
 
     <div class="footer-small">
         <span><i class="fas fa-tree"></i> Долина Приключений · 2026</span>
-        <span class="status-refresh"><i class="fas fa-server"></i> <span id="serverStatusText">Проверка...</span></span>
     </div>
 </div>
 
@@ -320,14 +270,11 @@
 
     const statusText = document.getElementById('statusText');
     const onlineCount = document.getElementById('onlineCount');
-    const serverStatusText = document.getElementById('serverStatusText');
     const statusDot = document.getElementById('statusDot');
-    const refreshBtn = document.getElementById('refreshBtn');
 
     function fetchStatus() {
         statusText.textContent = 'Проверка...';
         onlineCount.textContent = '--';
-        serverStatusText.textContent = '⏳';
 
         fetch(API_URL, { cache: 'no-store' })
             .then(res => res.json())
@@ -336,13 +283,11 @@
                     statusText.textContent = 'Активен ✅';
                     statusText.className = 'value online';
                     onlineCount.textContent = data.players || 0;
-                    serverStatusText.textContent = '✅ работает';
                     statusDot.style.color = '#6fbf6f';
                 } else {
                     statusText.textContent = 'Не активен ⛔';
                     statusText.className = 'value offline';
                     onlineCount.textContent = '—';
-                    serverStatusText.textContent = '⛔ офлайн';
                     statusDot.style.color = '#f28b82';
                 }
             })
@@ -350,22 +295,11 @@
                 statusText.textContent = 'Ошибка ⚠️';
                 statusText.className = 'value offline';
                 onlineCount.textContent = '—';
-                serverStatusText.textContent = '⚠️ ошибка';
                 statusDot.style.color = '#f28b82';
             });
     }
 
     fetchStatus();
-    refreshBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Обновление...';
-        this.disabled = true;
-        fetchStatus();
-        setTimeout(() => {
-            this.innerHTML = '<i class="fas fa-sync-alt"></i> Обновить';
-            this.disabled = false;
-        }, 700);
-    });
     setInterval(fetchStatus, 60000);
 })();
 </script>
