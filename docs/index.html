@@ -80,40 +80,51 @@
         }
         .description i { color: #dbbd7a; margin-right: 6px; }
         
-        .version-block { margin: 8px 0 12px 0; }
+        .server-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin: 18px 0 20px 0;
+        }
+        .server-box {
+            background: #182823;
+            padding: 16px 18px;
+            border-radius: 28px;
+            border: 1px solid #4b6b55;
+        }
+        .server-box .label {
+            font-weight: 600;
+            color: #dbbd7a;
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .server-box .detail {
+            font-size: 0.95rem;
+            color: #d4e8c9;
+            padding: 4px 0;
+        }
+        .server-box .detail i { width: 20px; color: #a1b89a; }
+        .server-box .ip {
+            font-family: monospace;
+            background: #0e1c16;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            border: 1px solid #5d7f62;
+            margin-top: 4px;
+            font-size: 0.9rem;
+        }
         .version-tag {
             display: inline-block;
             background: #263b30;
-            padding: 3px 14px;
+            padding: 2px 12px;
             border-radius: 30px;
             font-size: 0.8rem;
-            font-weight: 500;
             color: #d8dcc0;
             border: 1px solid #627a5a;
-            margin-right: 8px;
+            margin-right: 6px;
             margin-bottom: 4px;
-        }
-        .ip-block {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 18px 30px;
-            background: #182823;
-            padding: 18px 20px;
-            border-radius: 28px;
-            margin: 18px 0 20px 0;
-            border: 1px solid #4b6b55;
-        }
-        .ip-item { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .ip-item i { font-size: 1.3rem; width: 28px; color: #dbbd7a; }
-        .ip-label { font-weight: 600; color: #bfd7b5; }
-        .ip-address {
-            background: #0e1c16;
-            padding: 6px 18px;
-            border-radius: 40px;
-            font-family: monospace;
-            font-weight: 600;
-            color: #f1e3c6;
-            border: 1px solid #5d7f62;
         }
         
         .tg-section {
@@ -148,7 +159,6 @@
             font-size: 1rem;
         }
         .tg-item i { color: #31a9e0; font-size: 1.3rem; }
-        .tg-item .tg-emoji { font-size: 1.1rem; }
         
         .creator {
             display: flex;
@@ -207,10 +217,9 @@
         @media (max-width: 550px) {
             .card { padding: 20px 16px; }
             .title { font-size: 1.7rem; flex-wrap: wrap; }
-            .ip-item { width: 100%; }
+            .server-info { grid-template-columns: 1fr; }
             .tg-section { flex-direction: column; }
             .status-grid { grid-template-columns: 1fr; }
-            .badge-online { width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -245,20 +254,35 @@
         <p style="margin-top:10px;"><i class="fas fa-users"></i> Присоединяйся к нашему небольшому, но уютному семейству. В Долине всегда есть место для нового путешественника!</p>
     </div>
 
-    <!-- ВЕРСИИ -->
-    <div class="version-block">
-        <span class="version-tag"><i class="fab fa-java"></i> Java 1.10 — 26.2</span>
-        <span class="version-tag"><i class="fas fa-cube"></i> Bedrock 26.0 — 26.32</span>
-        <span style="margin-left:6px;color:#b2cba5;font-size:0.85rem;"><i class="fas fa-tag"></i> все поддерживаемые</span>
+    <!-- ВЕРСИИ + IP для Java и Bedrock -->
+    <div class="server-info">
+        <!-- Java -->
+        <div class="server-box">
+            <span class="label"><i class="fab fa-java"></i> Java</span>
+            <div class="detail">
+                <i class="fas fa-tag"></i> Версии: 
+                <span class="version-tag">1.10 — 26.2</span>
+            </div>
+            <div class="detail">
+                <i class="fas fa-network-wired"></i> IP: 
+                <span class="ip">d2.rustix.me:25172</span>
+            </div>
+        </div>
+        <!-- Bedrock -->
+        <div class="server-box">
+            <span class="label"><i class="fas fa-mobile-alt"></i> Bedrock</span>
+            <div class="detail">
+                <i class="fas fa-tag"></i> Версии: 
+                <span class="version-tag">26.0 — 26.32</span>
+            </div>
+            <div class="detail">
+                <i class="fas fa-network-wired"></i> IP: 
+                <span class="ip">d2.rustix.me:27902</span>
+            </div>
+        </div>
     </div>
 
-    <!-- IP -->
-    <div class="ip-block">
-        <div class="ip-item"><i class="fab fa-java"></i><span class="ip-label">Java</span><span class="ip-address">d2.rustix.me:25172</span></div>
-        <div class="ip-item"><i class="fas fa-mobile-alt"></i><span class="ip-label">Bedrock</span><span class="ip-address">d2.rustix.me:27902</span></div>
-    </div>
-
-    <!-- ТЕЛЕГРАМ: КНОПКИ -->
+    <!-- ТЕЛЕГРАМ: КНОПКИ (канал + группа) -->
     <div class="tg-section">
         <div class="tg-item">
             <a href="https://t.me/Dolina_SMP" target="_blank">
@@ -270,18 +294,15 @@
                 <i class="fab fa-telegram-plane"></i> Группа сервера
             </a>
         </div>
-        <div class="tg-item" style="background:#1a2a20;border-color:#7d8f6a;">
-            <a href="https://t.me/RabbitBoXy" target="_blank" style="color:#e3dcc0;">
-                <i class="fas fa-user-cog"></i> Владелец
-            </a>
-        </div>
     </div>
 
-    <!-- СОЗДАТЕЛЬ (доп. информация) -->
+    <!-- ВЛАДЕЛЕЦ (одна кнопка) -->
     <div class="creator">
-        <i class="fas fa-paw"></i>
-        <span>Создатель сервера:</span>
-        <a href="https://t.me/RabbitBoXy" target="_blank"><i class="fas fa-user"></i> RabbitBoXy</a>
+        <i class="fas fa-user-cog"></i>
+        <span>Владелец сервера:</span>
+        <a href="https://t.me/RabbitBoXy" target="_blank">
+            <i class="fas fa-paw"></i> RabbitBoXy
+        </a>
         <span style="margin-left:auto;background:#1b3126;padding:3px 16px;border-radius:30px;font-size:0.8rem;border:1px solid #4a6b4e;">
             <i class="fas fa-tag"></i> @RabbitBoXy
         </span>
