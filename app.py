@@ -22,9 +22,9 @@ def update_status_loop():
     global cached_status
     while True:
         try:
-            # Используем API mcsrvstat.us (он видит твой сервер)
+            # 🔥 ИСПОЛЬЗУЕМ mcapi.us — он работает из Render
             resp = requests.get(
-                'https://api.mcsrvstat.us/2/d2.rustix.me',
+                'https://mcapi.us/server/status?ip=d2.rustix.me&port=25172',
                 timeout=10
             )
             data = resp.json()
@@ -33,10 +33,10 @@ def update_status_loop():
             
             cached_status = {
                 "online": online,
-                "players": data.get('players', {}).get('online', 0) if online else 0,
+                "players": data.get('players', {}).get('now', 0) if online else 0,
                 "max_players": data.get('players', {}).get('max', 0) if online else 0,
-                "version": data.get('version', 'Неизвестно') if online else 'Неизвестно',
-                "motd": str(data.get('motd', {}).get('clean', [''])[0]) if online else '',
+                "version": data.get('server', {}).get('name', 'Неизвестно') if online else 'Неизвестно',
+                "motd": data.get('motd', '') if online else '',
                 "latency": 0,
                 "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
