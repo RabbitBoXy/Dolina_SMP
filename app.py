@@ -2,37 +2,21 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from mcstatus import JavaServer
 from datetime import datetime
-import threading
 import time
+import threading
 
 app = Flask(__name__)
 CORS(app)
 
-# Настройки твоего сервера
-SERVER_HOST = "d2.rustix.me"
-SERVER_PORT = 25172
+# Глобальный кеш
+cached_status = {"online": False, "players": 0}
 
-cached_status = {
-    "online": False,
-    "players": 0,
-    "max_players": 0,
-    "version": "Неизвестно",
-    "motd": "",
-    "latency": 0,
-    "last_updated": "Запуск..."
-}
-
-def update_status_loop():
-    """Фоновый поток обновления статуса через mcstatus"""
+def update_status():
     global cached_status
     while True:
         try:
-            print(f"🔄 Проверяю {SERVER_HOST}:{SERVER_PORT} через mcstatus...")
-            
-            # Пытаемся подключиться к серверу
-            server = JavaServer.lookup(f"{SERVER_HOST}:{SERVER_PORT}")
+            server = JavaServer.lookup("d2.rustix.me:25172")
             status = server.status()
-            
             cached_status = {
                 "online": True,
                 "players": status.players.online,
@@ -43,9 +27,7 @@ def update_status_loop():
                 "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
             print(f"✅ Сервер работает, игроков: {status.players.online}")
-            
         except Exception as e:
-            print(f"❌ Ошибка mcstatus: {e}")
             cached_status = {
                 "online": False,
                 "players": 0,
@@ -56,24 +38,19 @@ def update_status_loop():
                 "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "error": str(e)
             }
-        
+            print(f"❌ Ошибка: {e}")
         time.sleep(30)
 
-# Запускаем фоновый поток
-thread = threading.Thread(target=update_status_loop, daemon=True)
+# Запускаем поток
+thread = threading.Thread(target=update_status, daemon=True)
 thread.start()
-print("🚀 Фоновый поток обновления статуса запущен")
 
 @app.route('/')
 def home():
-    return jsonify({
-        "status": "ok",
-        "message": "Minecraft server status API",
-        "endpoint": "/status"
-    })
+    return jsonify({"status": "ok", "message": "Minecraft API"})
 
 @app.route('/status')
-def get_status():
+def status():
     return jsonify(cached_status)
 
 if __name__ == '__main__':
