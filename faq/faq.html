@@ -308,12 +308,6 @@
     renderTabs();
     renderQuestions(currentTopic);
 
-    // Открываем первый вопрос по умолчанию
-    setTimeout(() => {
-        const firstItem = document.querySelector('.faq-item');
-        if (firstItem) firstItem.classList.add('open');
-    }, 100);
-
     // Глобально делаем функции доступными
     window.toggleFaq = toggleFaq;
     window.switchTopic = switchTopic;
