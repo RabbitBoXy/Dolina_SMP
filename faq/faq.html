@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ — Долина Приключений</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body {
+            background: linear-gradient(145deg, #0b1a1e 0%, #1a2f2f 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 0 30px 0;
+            flex-wrap: wrap;
+        }
+        .header h1 {
+            color: #f7e3b0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .header a {
+            color: #bfd7b5;
+            text-decoration: none;
+            padding: 6px 18px;
+            border-radius: 30px;
+            border: 1px solid #4b6b55;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+        .header a:hover {
+            background: #1d352a;
+            border-color: #b8a56a;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .tab-btn {
+            background: transparent;
+            border: 1px solid #4b6b55;
+            color: #d4e8c9;
+            padding: 8px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+        .tab-btn:hover {
+            background: #1d352a;
+        }
+        .tab-btn.active {
+            background: #2d4b3e;
+            border-color: #c9a86a;
+            color: #f7e3b0;
+        }
+
+        .faq-section {
+            display: none;
+        }
+        .faq-section.active {
+            display: block;
+        }
+
+        .faq-item {
+            background: rgba(20, 35, 30, 0.6);
+            border-radius: 16px;
+            padding: 18px 22px;
+            margin-bottom: 12px;
+            border-left: 4px solid #c9a86a;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .faq-item:hover {
+            background: rgba(30, 50, 40, 0.7);
+        }
+        .faq-question {
+            font-weight: 600;
+            color: #f1e3c6;
+            font-size: 1.05rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-question i {
+            color: #c9a86a;
+            transition: 0.3s;
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            color: #d4e8c9;
+            line-height: 1.6;
+            padding: 0 10px;
+        }
+        .faq-answer code {
+            background: #1a2a1f;
+            padding: 2px 10px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+        }
+        .faq-answer a {
+            color: #dbbd7a;
+            text-decoration: none;
+        }
+        .faq-answer a:hover {
+            text-decoration: underline;
+        }
+        .faq-item.open .faq-answer {
+            max-height: 600px;
+            padding: 12px 10px 4px 10px;
+        }
+        .faq-item.open .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #bfd7b5;
+            text-decoration: none;
+            border: 1px solid #4b6b55;
+            padding: 8px 24px;
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+        .back-link:hover {
+            background: #1d352a;
+            border-color: #b8a56a;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: 1px solid #4b6b55;
+            background: rgba(0,0,0,0.2);
+            color: #e9f0e6;
+            font-size: 1rem;
+            margin-bottom: 24px;
+            outline: none;
+        }
+        .search-box::placeholder {
+            color: #8aa39a;
+        }
+        .search-box:focus {
+            border-color: #c9a86a;
+        }
+
+        @media (max-width: 550px) {
+            .header h1 { font-size: 1.5rem; }
+            .tabs { gap: 6px; }
+            .tab-btn { font-size: 0.8rem; padding: 6px 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1><i class="fas fa-question-circle" style="color: #dbbd7a;"></i> Часто задаваемые вопросы</h1>
+        <a href="../index.html"><i class="fas fa-arrow-left"></i> На главную</a>
+    </div>
+
+    <input type="text" class="search-box" id="searchInput" placeholder="🔍 Найти вопрос..." onkeyup="searchFaq()">
+
+    <div class="tabs" id="topicTabs"></div>
+
+    <div id="faqContainer"></div>
+
+    <a href="../index.html" class="back-link"><i class="fas fa-home"></i> На главную</a>
+</div>
+
+<script src="faq-data.js"></script>
+<script>
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    const topics = faqData;
+    const topicNames = Object.keys(topics);
+
+    const tabsContainer = document.getElementById('topicTabs');
+    const faqContainer = document.getElementById('faqContainer');
+
+    let currentTopic = topicNames[0];
+
+    // Рендер кнопок тем
+    function renderTabs() {
+        tabsContainer.innerHTML = '';
+        topicNames.forEach((name, index) => {
+            const btn = document.createElement('button');
+            btn.className = `tab-btn ${index === 0 ? 'active' : ''}`;
+            btn.textContent = name;
+            btn.dataset.topic = name;
+            btn.onclick = () => switchTopic(name);
+            tabsContainer.appendChild(btn);
+        });
+    }
+
+    // Переключение темы
+    function switchTopic(topic) {
+        currentTopic = topic;
+        document.getElementById('searchInput').value = '';
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.topic === topic);
+        });
+        renderQuestions(topic);
+    }
+
+    // Рендер вопросов
+    function renderQuestions(topic) {
+        const questions = topics[topic] || [];
+        faqContainer.innerHTML = `<div class="faq-section active">`;
+
+        if (questions.length === 0) {
+            faqContainer.innerHTML += `<p style="color:#a1b89a;">В этой теме пока нет вопросов.</p>`;
+        } else {
+            questions.forEach((item) => {
+                const div = document.createElement('div');
+                div.className = 'faq-item';
+                div.innerHTML = `
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        ${item.question}
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">${item.answer}</div>
+                `;
+                faqContainer.querySelector('.faq-section').appendChild(div);
+            });
+        }
+
+        faqContainer.innerHTML += `</div>`;
+    }
+
+    // Переключение ответа
+    function toggleFaq(el) {
+        const item = el.closest('.faq-item');
+        if (item) {
+            item.classList.toggle('open');
+        }
+    }
+
+    // Поиск
+    function searchFaq() {
+        const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+        if (query === '') {
+            renderQuestions(currentTopic);
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.style.display = 'inline-block';
+            });
+            return;
+        }
+
+        // Скрываем вкладки
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.style.display = 'none';
+        });
+
+        // Ищем
+        const results = [];
+        topicNames.forEach(topic => {
+            topics[topic].forEach(item => {
+                if (item.question.toLowerCase().includes(query) || item.answer.toLowerCase().includes(query)) {
+                    results.push({ ...item, topic });
+                }
+            });
+        });
+
+        // Показываем результаты
+        faqContainer.innerHTML = `<div class="faq-section active">
+            <h3 style="color:#dbbd7a; margin-bottom:16px;">🔍 Результаты поиска (${results.length})</h3>
+        `;
+
+        if (results.length === 0) {
+            faqContainer.innerHTML += `<p style="color:#a1b89a;">Ничего не найдено. Попробуй изменить запрос.</p>`;
+        } else {
+            results.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'faq-item';
+                div.innerHTML = `
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        ${item.question}
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">${item.answer}</div>
+                `;
+                faqContainer.querySelector('.faq-section').appendChild(div);
+            });
+        }
+
+        faqContainer.innerHTML += `</div>`;
+    }
+
+    // Запуск
+    renderTabs();
+    renderQuestions(currentTopic);
+
+    // Открываем первый вопрос по умолчанию
+    setTimeout(() => {
+        const firstItem = document.querySelector('.faq-item');
+        if (firstItem) firstItem.classList.add('open');
+    }, 100);
+
+    // Глобально делаем функции доступными
+    window.toggleFaq = toggleFaq;
+    window.switchTopic = switchTopic;
+    window.searchFaq = searchFaq;
+</script>
+
+</body>
+</html>
