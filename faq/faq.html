@@ -4,8 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAQ — Долина Приключений</title>
+    
+    <!-- ОТКЛЮЧАЕМ КЕШ -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* ... весь твой стиль без изменений ... */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
         body {
             background: linear-gradient(145deg, #0b1a1e 0%, #1a2f2f 100%);
@@ -185,7 +192,11 @@
     <a href="../index.html" class="back-link"><i class="fas fa-home"></i> На главную</a>
 </div>
 
-<script src="faq-data.js"></script>
+<!-- АВТОМАТИЧЕСКАЯ ЗАГРУЗКА СВЕЖЕГО ФАЙЛА БЕЗ КЕША -->
+<script>
+    document.write('<script src="faq-data.js?t=' + Date.now() + '"><\/script>');
+</script>
+
 <script>
     // ===== ИНИЦИАЛИЗАЦИЯ =====
     const topics = faqData;
