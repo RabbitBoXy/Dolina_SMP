@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Долина Приключений — SMP</title>
+    <title>Долина Приключений · SMP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
@@ -161,6 +161,7 @@
         }
         .tg-item i { color: #31a9e0; font-size: 1.3rem; }
         .tg-item .owner-icon { color: #dbbd7a; }
+        .tg-item .faq-icon { color: #c9a86a; }
         
         .footer-small {
             display: flex;
@@ -170,8 +171,22 @@
             color: #a1b89a;
             border-top: 1px solid #3a5542;
             padding-top: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
         }
-        .footer-small i { color: #c9a86a; }
+        .footer-small a {
+            color: #bfd7b5;
+            text-decoration: none;
+            padding: 4px 14px;
+            border-radius: 30px;
+            border: 1px solid #4b6b55;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+        .footer-small a:hover {
+            background: #1d352a;
+            border-color: #b8a56a;
+        }
         
         @media (max-width: 550px) {
             .card { padding: 20px 16px; }
@@ -231,7 +246,7 @@
             <span class="label"><i class="fas fa-mobile-alt"></i> Bedrock</span>
             <div class="detail">
                 <i class="fas fa-tag"></i> Версии: 
-                <span class="version-tag">26.0 — 26.32</span>
+                <span class="version-tag">26.0 — 26.44</span>
             </div>
             <div class="detail">
                 <i class="fas fa-network-wired"></i> IP: 
@@ -240,7 +255,7 @@
         </div>
     </div>
 
-    <!-- ТЕЛЕГРАМ: КНОПКИ (канал + группа + владелец) -->
+    <!-- ТЕЛЕГРАМ: КНОПКИ (канал + группа + владелец + FAQ) -->
     <div class="tg-section">
         <div class="tg-item">
             <a href="https://t.me/Dolina_SMP" target="_blank">
@@ -255,6 +270,11 @@
         <div class="tg-item">
             <a href="https://t.me/RabbitBoXy" target="_blank">
                 <i class="fas fa-user-cog owner-icon"></i> Владелец
+            </a>
+        </div>
+        <div class="tg-item">
+            <a href="faq/faq.html">
+                <i class="fas fa-question-circle faq-icon"></i> FAQ
             </a>
         </div>
     </div>
@@ -280,7 +300,6 @@
         fetch(API_URL, { cache: 'no-store' })
             .then(res => res.json())
             .then(data => {
-                // mcapi.us возвращает { online: true/false, players: { now: 5 } }
                 const isOnline = data.online === true;
                 const players = data.players?.now ?? 0;
 
