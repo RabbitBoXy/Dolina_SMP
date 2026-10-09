@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAQ — Долина Приключений</title>
     
-    <!-- ОТКЛЮЧАЕМ КЕШ -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -173,17 +172,13 @@
 
     <div id="faqContainer"></div>
 
-    <!-- НИЖНЯЯ КНОПКА УДАЛЕНА -->
-
 </div>
 
-<!-- АВТОМАТИЧЕСКАЯ ЗАГРУЗКА СВЕЖЕГО ФАЙЛА БЕЗ КЕША -->
 <script>
     document.write('<script src="faq-data.js?t=' + Date.now() + '"><\/script>');
 </script>
 
 <script>
-    // ===== ИНИЦИАЛИЗАЦИЯ =====
     const topics = faqData;
     const topicNames = Object.keys(topics);
 
@@ -192,7 +187,6 @@
 
     let currentTopic = topicNames[0];
 
-    // Рендер кнопок тем
     function renderTabs() {
         tabsContainer.innerHTML = '';
         topicNames.forEach((name, index) => {
@@ -205,7 +199,6 @@
         });
     }
 
-    // Переключение темы
     function switchTopic(topic) {
         currentTopic = topic;
         document.getElementById('searchInput').value = '';
@@ -215,7 +208,6 @@
         renderQuestions(topic);
     }
 
-    // Рендер вопросов
     function renderQuestions(topic) {
         const questions = topics[topic] || [];
         faqContainer.innerHTML = `<div class="faq-section active">`;
@@ -240,7 +232,6 @@
         faqContainer.innerHTML += `</div>`;
     }
 
-    // Переключение ответа
     function toggleFaq(el) {
         const item = el.closest('.faq-item');
         if (item) {
@@ -248,7 +239,6 @@
         }
     }
 
-    // Поиск
     function searchFaq() {
         const query = document.getElementById('searchInput').value.toLowerCase().trim();
 
@@ -260,12 +250,10 @@
             return;
         }
 
-        // Скрываем вкладки
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.style.display = 'none';
         });
 
-        // Ищем
         const results = [];
         topicNames.forEach(topic => {
             topics[topic].forEach(item => {
@@ -275,7 +263,6 @@
             });
         });
 
-        // Показываем результаты
         faqContainer.innerHTML = `<div class="faq-section active">
             <h3 style="color:#dbbd7a; margin-bottom:16px;">🔍 Результаты поиска (${results.length})</h3>
         `;
@@ -300,11 +287,9 @@
         faqContainer.innerHTML += `</div>`;
     }
 
-    // Запуск
     renderTabs();
     renderQuestions(currentTopic);
 
-    // Глобально делаем функции доступными
     window.toggleFaq = toggleFaq;
     window.switchTopic = switchTopic;
     window.searchFaq = searchFaq;
