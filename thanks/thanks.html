@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Благодарность игрокам — Долина Приключений</title>
+    
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body {
+            background: linear-gradient(145deg, #0b1a1e 0%, #1a2f2f 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 0 30px 0;
+            flex-wrap: wrap;
+        }
+        .header h1 {
+            color: #f7e3b0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .header a {
+            color: #bfd7b5;
+            text-decoration: none;
+            padding: 6px 18px;
+            border-radius: 30px;
+            border: 1px solid #4b6b55;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+        .header a:hover {
+            background: #1d352a;
+            border-color: #b8a56a;
+        }
+        .intro {
+            background: rgba(20, 35, 30, 0.6);
+            padding: 20px 24px;
+            border-radius: 24px;
+            margin-bottom: 24px;
+            border-left: 5px solid #c9a86a;
+            line-height: 1.6;
+            color: #d4e8c9;
+        }
+        .intro i { color: #dbbd7a; margin-right: 6px; }
+
+        .players-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .player-item {
+            background: rgba(20, 35, 30, 0.7);
+            border-radius: 16px;
+            padding: 14px 22px;
+            border: 1px solid #4b6b55;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: 0.2s;
+        }
+        .player-item:hover {
+            background: rgba(30, 50, 40, 0.9);
+            border-color: #c9a86a;
+            transform: translateX(4px);
+        }
+        .player-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #1a2a1f;
+            border: 1px solid #5d7f62;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #dbbd7a;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .player-nick {
+            color: #f1e3c6;
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+        .player-heart {
+            margin-left: auto;
+            color: #e07a9e;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 550px) {
+            .header h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1><i class="fas fa-heart" style="color:#dbbd7a;"></i> Благодарность игрокам</h1>
+        <a href="../index.html"><i class="fas fa-arrow-left"></i> На главную</a>
+    </div>
+
+    <div class="intro">
+        <p><i class="fas fa-star"></i> <strong>Спасибо каждому, кто делает Долину Приключений лучше!</strong></p>
+        <p style="margin-top:8px;">Этот сервер существует благодаря вам. Мы ценим каждого игрока!</p>
+    </div>
+
+    <div class="players-list" id="playersList"></div>
+
+</div>
+
+<script>
+    document.write('<script src="thanks-data.js?t=' + Date.now() + '"><\/script>');
+</script>
+
+<script>
+    function renderPlayers() {
+        const container = document.getElementById('playersList');
+        container.innerHTML = '';
+
+        thanksData.forEach(nick => {
+            const firstLetter = nick.charAt(0).toUpperCase();
+
+            const item = document.createElement('div');
+            item.className = 'player-item';
+            item.innerHTML = `
+                <div class="player-avatar">${firstLetter}</div>
+                <div class="player-nick">${nick}</div>
+                <div class="player-heart"><i class="fas fa-heart"></i></div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    renderPlayers();
+</script>
+
+</body>
+</html>
