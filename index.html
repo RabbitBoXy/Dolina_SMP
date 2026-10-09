@@ -162,6 +162,7 @@
         .tg-item i { color: #31a9e0; font-size: 1.3rem; }
         .tg-item .owner-icon { color: #dbbd7a; }
         .tg-item .faq-icon { color: #c9a86a; }
+        .tg-item .thanks-icon { color: #e07a9e; }
         
         .footer-small {
             display: flex;
@@ -171,21 +172,6 @@
             color: #a1b89a;
             border-top: 1px solid #3a5542;
             padding-top: 16px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .footer-small a {
-            color: #bfd7b5;
-            text-decoration: none;
-            padding: 4px 14px;
-            border-radius: 30px;
-            border: 1px solid #4b6b55;
-            transition: 0.2s;
-            font-size: 0.85rem;
-        }
-        .footer-small a:hover {
-            background: #1d352a;
-            border-color: #b8a56a;
         }
         
         @media (max-width: 550px) {
@@ -234,7 +220,7 @@
             <span class="label"><i class="fab fa-java"></i> Java</span>
             <div class="detail">
                 <i class="fas fa-tag"></i> Версии: 
-                <span class="version-tag">1.10 — 26.2</span>
+                <span class="version-tag">1.17 — 26.3</span>
             </div>
             <div class="detail">
                 <i class="fas fa-network-wired"></i> IP: 
@@ -246,7 +232,7 @@
             <span class="label"><i class="fas fa-mobile-alt"></i> Bedrock</span>
             <div class="detail">
                 <i class="fas fa-tag"></i> Версии: 
-                <span class="version-tag">26.0 — 26.45</span>
+                <span class="version-tag">26.30 — 26.52</span>
             </div>
             <div class="detail">
                 <i class="fas fa-network-wired"></i> IP: 
@@ -255,7 +241,7 @@
         </div>
     </div>
 
-    <!-- ТЕЛЕГРАМ: КНОПКИ (канал + группа + владелец + FAQ) -->
+    <!-- КНОПКИ -->
     <div class="tg-section">
         <div class="tg-item">
             <a href="https://t.me/Dolina_SMP" target="_blank">
@@ -277,6 +263,11 @@
                 <i class="fas fa-question-circle faq-icon"></i> FAQ
             </a>
         </div>
+        <div class="tg-item">
+            <a href="thanks/thanks.html">
+                <i class="fas fa-heart thanks-icon"></i> Благодарность
+            </a>
+        </div>
     </div>
 
     <div class="footer-small">
@@ -286,7 +277,6 @@
 
 <script>
 (function() {
-    // ИСПОЛЬЗУЕМ API MCAPI.US С ТВОИМ ПОРТОМ
     const API_URL = 'https://mcapi.us/server/status?ip=d2.rustix.me&port=25172';
 
     const statusText = document.getElementById('statusText');
